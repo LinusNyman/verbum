@@ -37,22 +37,26 @@ changelog:
     exclude: ["^docs:", "^test:", "^chore:"]
 
 # Homebrew tap: publishes a formula to github.com/linusnyman/homebrew-vox so
-# `brew install linusnyman/vox/vox` works. The tap repo must exist and
-# HOMEBREW_TAP_TOKEN must grant write access to it.
-brews:
-  - name: vox
-    repository:
-      owner: linusnyman
-      name: homebrew-vox
-      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
-    homepage: "https://github.com/linusnyman/vox"
-    description: "Offline Wiktionary CLI dictionary"
-    license: "MIT"
-    install: |
-      bin.install "vox"
-    caveats: |
-      Build the dictionary once before first use:
-        vox update
-      This downloads ~1.5 GB of parsed Wiktionary data (kaikki.org).
-    test: |
-      system "#{bin}/vox", "--version"
+# `brew install linusnyman/vox/vox` works.
+#
+# DISABLED until a HOMEBREW_TAP_TOKEN secret (a PAT with write access to the
+# homebrew-vox repo) is added to the vox repo. Uncomment this block, then tag a
+# new release, and the formula will publish automatically.
+#
+# brews:
+#   - name: vox
+#     repository:
+#       owner: linusnyman
+#       name: homebrew-vox
+#       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+#     homepage: "https://github.com/linusnyman/vox"
+#     description: "Offline Wiktionary CLI dictionary"
+#     license: "MIT"
+#     install: |
+#       bin.install "vox"
+#     caveats: |
+#       Build the dictionary once before first use:
+#         vox update
+#       This downloads ~1.5 GB of parsed Wiktionary data (kaikki.org).
+#     test: |
+#       system "#{bin}/vox", "--version"
