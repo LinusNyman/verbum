@@ -1,0 +1,58 @@
+version: 2
+
+project_name: vox
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: vox
+    main: ./cmd/vox
+    binary: vox
+    # Pure Go (modernc sqlite) — no cgo, so cross-compilation is trivial.
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+    goos: [darwin, linux, windows]
+    goarch: [amd64, arm64]
+
+archives:
+  - id: vox
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude: ["^docs:", "^test:", "^chore:"]
+
+# Homebrew tap: publishes a formula to github.com/linusnyman/homebrew-vox so
+# `brew install linusnyman/vox/vox` works. The tap repo must exist and
+# HOMEBREW_TAP_TOKEN must grant write access to it.
+brews:
+  - name: vox
+    repository:
+      owner: linusnyman
+      name: homebrew-vox
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    homepage: "https://github.com/linusnyman/vox"
+    description: "Offline Wiktionary CLI dictionary"
+    license: "MIT"
+    install: |
+      bin.install "vox"
+    caveats: |
+      Build the dictionary once before first use:
+        vox update
+      This downloads ~1.5 GB of parsed Wiktionary data (kaikki.org).
+    test: |
+      system "#{bin}/vox", "--version"
