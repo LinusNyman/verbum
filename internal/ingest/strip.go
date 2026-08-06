@@ -54,7 +54,7 @@ func strip(r *rawEntry) *store.Entry {
 	}
 	e := &store.Entry{
 		Word: r.Word,
-		Lang: r.LangCode,
+		Lang: normCode(r.LangCode),
 		POS:  r.POS,
 		Etym: r.Etymology,
 	}
@@ -102,15 +102,16 @@ func strip(r *rawEntry) *store.Entry {
 	if r.LangCode == "en" {
 		seenTr := map[string]bool{}
 		for _, t := range r.Translations {
-			if t.Word == "" || !codeSet[t.Code] {
+			code := normCode(t.Code)
+			if t.Word == "" || !codeSet[code] {
 				continue
 			}
-			key := t.Code + "\x00" + t.Word
+			key := code + "\x00" + t.Word
 			if seenTr[key] {
 				continue
 			}
 			seenTr[key] = true
-			e.Trans = append(e.Trans, store.Trans{Code: t.Code, Word: t.Word})
+			e.Trans = append(e.Trans, store.Trans{Code: code, Word: t.Word})
 		}
 	}
 

@@ -20,7 +20,7 @@ FLAGS
   --version     version
 
 LANGUAGES
-  en sv de fr es la el grc
+  en sv de fr es la el gr
 
 NOTES
   Section flags stack: -e -q shows etymology + quirks, nothing else.

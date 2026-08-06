@@ -7,7 +7,7 @@ import "strings"
 // `data` BLOB across millions of rows, so short keys measurably shrink the DB.
 type Entry struct {
 	Word   string   `json:"w"`
-	Lang   string   `json:"l"` // lang_code: en sv de fr es la el grc
+	Lang   string   `json:"l"` // lang_code: en sv de fr es la el gr
 	POS    string   `json:"p,omitempty"`
 	IPA    []string `json:"ipa,omitempty"`
 	Etym   string   `json:"e,omitempty"`

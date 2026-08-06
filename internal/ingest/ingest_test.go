@@ -13,16 +13,20 @@ import (
 
 // kaikki-shaped fixtures, one JSON object per line, per language slice.
 var fixtures = map[string]string{
-	"en": `{"word":"pattern","pos":"noun","lang_code":"en","etymology_text":"From Middle English patron, from Old French patron.","sounds":[{"ipa":"/ˈpæt.ən/"},{"ipa":"/ˈpæt.ən/"}],"senses":[{"glosses":["A design, motif or decorative arrangement."],"tags":["countable"],"examples":[{"text":"the wallpaper's floral pattern"},{"text":"x"},{"text":"y"}]},{"glosses":["A model to be copied."],"tags":["countable","uncountable"]}],"forms":[{"form":"patterns","tags":["plural"]}],"translations":[{"code":"de","word":"Muster"},{"code":"de","word":"Vorlage"},{"code":"fr","word":"motif"},{"code":"sv","word":"mönster"},{"code":"zz","word":"IGNORE"}]}`,
+	"en": `{"word":"pattern","pos":"noun","lang_code":"en","etymology_text":"From Middle English patron, from Old French patron.","sounds":[{"ipa":"/ˈpæt.ən/"},{"ipa":"/ˈpæt.ən/"}],"senses":[{"glosses":["A design, motif or decorative arrangement."],"tags":["countable"],"examples":[{"text":"the wallpaper's floral pattern"},{"text":"x"},{"text":"y"}]},{"glosses":["A model to be copied."],"tags":["countable","uncountable"]}],"forms":[{"form":"patterns","tags":["plural"]}],"translations":[{"code":"de","word":"Muster"},{"code":"de","word":"Vorlage"},{"code":"fr","word":"motif"},{"code":"sv","word":"mönster"},{"code":"grc","word":"τύπος"},{"code":"zz","word":"IGNORE"}]}`,
 	"la": `{"word":"circinus","pos":"noun","lang_code":"la","senses":[{"glosses":["a pair of compasses"]}]}
 {"word":"circino","pos":"verb","lang_code":"la","senses":[{"glosses":["dative/ablative singular of circinus"],"form_of":[{"word":"circinus"}],"tags":["form-of"]}]}`,
 	"el": `{"word":"κοπανίζω","pos":"verb","lang_code":"el","senses":[{"glosses":["to beat, thrash"]}]}`,
 	"sv": `{"word":"mönster","pos":"noun","lang_code":"sv","senses":[{"glosses":["pattern"]}]}`,
+	// upstream lang_code is "grc"; vox stores it as "gr"
+	"gr": `{"word":"τύπος","pos":"noun","lang_code":"grc","senses":[{"glosses":["a blow, impression"]}]}`,
 }
+
+var testLangs = []string{"en", "la", "el", "sv", "gr"}
 
 func fakeFetcher(t *testing.T) func(string) (io.ReadCloser, error) {
 	byURL := map[string]string{}
-	for _, code := range []string{"en", "la", "el", "sv"} {
+	for _, code := range testLangs {
 		l, _ := ingest.ByCode(code)
 		byURL[l.URL()] = fixtures[code]
 	}
@@ -39,7 +43,7 @@ func buildTestDB(t *testing.T) *store.DB {
 	t.Helper()
 	dbPath := filepath.Join(t.TempDir(), "vox.db")
 	err := ingest.Run(dbPath, ingest.Options{
-		Only:    []string{"en", "la", "el", "sv"},
+		Only:    testLangs,
 		Fetcher: fakeFetcher(t),
 	})
 	if err != nil {
@@ -94,6 +98,20 @@ func TestTranslationsFilteredToTargets(t *testing.T) {
 	}
 	if !codes["de"] || !codes["sv"] || !codes["fr"] {
 		t.Errorf("expected de/sv/fr translations, got %v", codes)
+	}
+	if codes["grc"] || !codes["gr"] {
+		t.Errorf("grc translation code not normalized to gr: %v", codes)
+	}
+}
+
+func TestAncientGreekCodeNormalized(t *testing.T) {
+	db := buildTestDB(t)
+	got, err := db.Lookup("τύπος", nil)
+	if err != nil || len(got) != 1 {
+		t.Fatalf("lookup τύπος: got %d entries, err %v", len(got), err)
+	}
+	if got[0].Lang != "gr" {
+		t.Errorf("lang_code grc not normalized to gr: %q", got[0].Lang)
 	}
 }
 

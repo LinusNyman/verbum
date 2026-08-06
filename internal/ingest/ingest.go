@@ -19,7 +19,7 @@ import (
 // used only for the pre-flight free-space guard.
 var estBytesPerLang = map[string]uint64{
 	"en": 420 << 20, "la": 220 << 20, "de": 140 << 20, "es": 200 << 20,
-	"fr": 90 << 20, "grc": 50 << 20, "sv": 55 << 20, "el": 30 << 20,
+	"fr": 90 << 20, "gr": 50 << 20, "sv": 55 << 20, "el": 30 << 20,
 }
 
 // Options configures an update run.
