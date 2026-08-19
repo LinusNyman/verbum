@@ -1,6 +1,6 @@
 package render
 
-import "github.com/linusnyman/vox/internal/store"
+import "github.com/linusnyman/verbum/internal/store"
 
 // Readable JSON shape for --json (the stored struct uses terse keys to shrink
 // the DB; this remaps to full names for the machine-facing output).

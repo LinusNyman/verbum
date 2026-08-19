@@ -1,4 +1,4 @@
-# vox
+# verbum
 
 An offline, `man`-style terminal dictionary for reading across languages —
 English, Swedish, German, French, Spanish, Latin, Greek, and Ancient Greek.
@@ -7,7 +7,7 @@ Built for looking up **etymology**, **word quirks** (labels like *archaic*,
 half-remember a word. Unix-composable: quiet, pipe-friendly, exit codes.
 
 ```
-$ vox pattern
+$ verbum pattern
 pattern  noun  /ˈpæt.ən/, /ˈpæt.ɚn/
   (countable)
   1. A design, motif or decorative arrangement.
@@ -18,16 +18,16 @@ pattern  noun  /ˈpæt.ən/, /ˈpæt.ɚn/
 **Homebrew**
 
 ```sh
-brew install linusnyman/vox/vox
+brew install linusnyman/verbum/verbum
 ```
 
 **Go**
 
 ```sh
-go install github.com/linusnyman/vox/cmd/vox@latest
+go install github.com/linusnyman/verbum/cmd/verbum@latest
 ```
 
-Or grab a binary from the [releases](https://github.com/linusnyman/vox/releases).
+Or grab a binary from the [releases](https://github.com/linusnyman/verbum/releases).
 
 ## Build the dictionary
 
@@ -36,29 +36,29 @@ The binary ships **without data**. Build the local database once (downloads
 streamed and stripped on the fly; final DB ~1.6 GB):
 
 ```sh
-vox update                 # all 8 languages
-vox update --lang sv       # or just one, to try it out
-vox update --check         # show installed data age + counts
+verbum update                 # all 8 languages
+verbum update --lang sv       # or just one, to try it out
+verbum update --check         # show installed data age + counts
 ```
 
-Data lives under `${XDG_DATA_HOME:-~/.local/share}/vox/vox.db`.
+Data lives under `${XDG_DATA_HOME:-~/.local/share}/verbum/verbum.db`.
 
 ## Use
 
 ```
-vox WORD                 terse entry (sense 1 + labels)
-vox -v WORD              full entry (all senses, examples, etymology, translations)
-vox -e WORD              etymology only
-vox -q WORD              quirks only (archaic, countable, British…)
-vox -t de -t fr WORD     translate → German and French
-vox -l sv WORD           restrict to a source language
-vox -k WORD              fuzzy: print close spellings
-vox -r "beat, thrash"    reverse: search definitions for a word
-vox --json WORD          one JSON object per line
+verbum WORD                 terse entry (sense 1 + labels)
+verbum -v WORD              full entry (all senses, examples, etymology, translations)
+verbum -e WORD              etymology only
+verbum -q WORD              quirks only (archaic, countable, British…)
+verbum -t de -t fr WORD     translate → German and French
+verbum -l sv WORD           restrict to a source language
+verbum -k WORD              fuzzy: print close spellings
+verbum -r "beat, thrash"    reverse: search definitions for a word
+verbum --json WORD          one JSON object per line
 ```
 
-Section flags stack: `vox -e -q WORD` shows etymology **and** quirks, nothing
-else. Pipe a word list for batch lookups: `vox < words.txt`.
+Section flags stack: `verbum -e -q WORD` shows etymology **and** quirks, nothing
+else. Pipe a word list for batch lookups: `verbum < words.txt`.
 
 **Unix behaviour.** stdout is the answer; suggestions and errors go to stderr.
 Exit codes: `0` hit, `1` no match, `2` error. Colour and the pager engage only
@@ -77,13 +77,13 @@ on a terminal; `NO_COLOR` and `$PAGER` are honoured.
 ## Building from source
 
 ```sh
-go build ./cmd/vox
+go build ./cmd/verbum
 go test ./...
 ```
 
 ## Data license & attribution
 
-vox does not bundle dictionary data; `vox update` downloads it at runtime.
+verbum does not bundle dictionary data; `verbum update` downloads it at runtime.
 That data originates from [Wiktionary](https://www.wiktionary.org), parsed by
 [wiktextract](https://github.com/tatuylonen/wiktextract) and distributed via
 [kaikki.org](https://kaikki.org). Wiktionary content is licensed
@@ -92,4 +92,4 @@ of the definitions must carry that attribution and share-alike terms.
 
 ## License
 
-vox's own code is licensed **MIT** — see [LICENSE](LICENSE).
+verbum's own code is licensed **MIT** — see [LICENSE](LICENSE).

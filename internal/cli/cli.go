@@ -1,4 +1,4 @@
-// Package cli parses arguments and drives a single vox invocation. It owns the
+// Package cli parses arguments and drives a single verbum invocation. It owns the
 // Unix contract: stdout is the answer, suggestions/errors go to stderr, and the
 // process exit code is 0 (hit) / 1 (no match) / 2 (usage or runtime error).
 package cli
@@ -11,10 +11,10 @@ import (
 
 	"github.com/mattn/go-isatty"
 
-	"github.com/linusnyman/vox/internal/fuzzy"
-	"github.com/linusnyman/vox/internal/paths"
-	"github.com/linusnyman/vox/internal/render"
-	"github.com/linusnyman/vox/internal/store"
+	"github.com/linusnyman/verbum/internal/fuzzy"
+	"github.com/linusnyman/verbum/internal/paths"
+	"github.com/linusnyman/verbum/internal/render"
+	"github.com/linusnyman/verbum/internal/store"
 )
 
 const version = "0.1.0"
@@ -27,7 +27,7 @@ func Main(argv []string) int {
 
 	o, err := parse(argv)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	if o.Help {
@@ -35,22 +35,22 @@ func Main(argv []string) int {
 		return 0
 	}
 	if o.Version {
-		fmt.Println("vox " + version)
+		fmt.Println("verbum " + version)
 		return 0
 	}
 
 	if !paths.DBExists() {
-		fmt.Fprintln(os.Stderr, "vox: no dictionary yet — run `vox update` to build it")
+		fmt.Fprintln(os.Stderr, "verbum: no dictionary yet — run `verbum update` to build it")
 		return 2
 	}
 	dbPath, err := paths.DBPath()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	db, err := store.Open(dbPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	defer db.Close()
@@ -69,7 +69,7 @@ func Main(argv []string) int {
 		return runBatch(db, o, ropts, outTTY)
 	}
 	if len(o.Args) == 0 {
-		fmt.Fprintln(os.Stderr, "vox: no word given (try `vox -h`)")
+		fmt.Fprintln(os.Stderr, "verbum: no word given (try `verbum -h`)")
 		return 2
 	}
 
@@ -101,7 +101,7 @@ func lookup(db *store.DB, q string, o Options, ropts render.Options, outTTY bool
 
 	entries, err := db.Lookup(q, o.Langs)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 
@@ -109,16 +109,16 @@ func lookup(db *store.DB, q string, o Options, ropts render.Options, outTTY bool
 		sugg := suggest(db, q, o.Langs)
 		if o.Fuzzy { // -k : the candidate list IS the output (stdout)
 			if len(sugg) == 0 {
-				fmt.Fprintf(os.Stderr, "vox: no matches near %q\n", q)
+				fmt.Fprintf(os.Stderr, "verbum: no matches near %q\n", q)
 				return 1
 			}
 			fmt.Println(strings.Join(sugg, "\n"))
 			return 0
 		}
 		if len(sugg) > 0 {
-			fmt.Fprintf(os.Stderr, "vox: %q not found. did you mean: %s\n", q, strings.Join(sugg, ", "))
+			fmt.Fprintf(os.Stderr, "verbum: %q not found. did you mean: %s\n", q, strings.Join(sugg, ", "))
 		} else {
-			fmt.Fprintf(os.Stderr, "vox: %q not found\n", q)
+			fmt.Fprintf(os.Stderr, "verbum: %q not found\n", q)
 		}
 		return 1
 	}
@@ -129,7 +129,7 @@ func lookup(db *store.DB, q string, o Options, ropts render.Options, outTTY bool
 	if o.JSON {
 		out, err := render.JSONLines(entries)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+			fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 			return 2
 		}
 		fmt.Print(out)
@@ -137,7 +137,7 @@ func lookup(db *store.DB, q string, o Options, ropts render.Options, outTTY bool
 	}
 
 	if err := render.Page(render.Entries(entries, ropts), outTTY); err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	return 0
@@ -173,11 +173,11 @@ func withLemmas(db *store.DB, entries []*store.Entry) []*store.Entry {
 func reverse(db *store.DB, q string, o Options, outTTY bool) int {
 	entries, err := db.Reverse(q, o.Langs, 20)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	if len(entries) == 0 {
-		fmt.Fprintf(os.Stderr, "vox: nothing matches %q\n", q)
+		fmt.Fprintf(os.Stderr, "verbum: nothing matches %q\n", q)
 		return 1
 	}
 	if o.JSON {

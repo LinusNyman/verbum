@@ -6,7 +6,7 @@ package ingest
 // filename drops them — "Ancient Greek" → dir "Ancient%20Greek", file
 // "AncientGreek". Guessing one form for both 404s.
 type Lang struct {
-	Code string // code vox exposes: en sv de fr es la el gr
+	Code string // code verbum exposes: en sv de fr es la el gr
 	Name string // display name
 	Dir  string // URL directory segment (spaces as %20)
 	File string // filename segment (spaces removed)
@@ -24,8 +24,8 @@ var Langs = []Lang{
 	{"gr", "Ancient Greek", "Ancient%20Greek", "AncientGreek"},
 }
 
-// normCode maps an upstream kaikki lang_code to the code vox exposes.
-// kaikki emits "grc" for Ancient Greek; vox uses "gr".
+// normCode maps an upstream kaikki lang_code to the code verbum exposes.
+// kaikki emits "grc" for Ancient Greek; verbum uses "gr".
 func normCode(c string) string {
 	if c == "grc" {
 		return "gr"

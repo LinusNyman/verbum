@@ -1,8 +1,8 @@
 package ingest
 
-import "github.com/linusnyman/vox/internal/store"
+import "github.com/linusnyman/verbum/internal/store"
 
-// Raw kaikki (wiktextract) record — only the fields vox keeps. Everything else
+// Raw kaikki (wiktextract) record — only the fields verbum keeps. Everything else
 // (categories, sense-level categories, head_templates, sound audio, …) is
 // ignored on decode, which is the bulk of the strip.
 type rawEntry struct {

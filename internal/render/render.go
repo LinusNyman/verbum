@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/linusnyman/vox/internal/store"
+	"github.com/linusnyman/verbum/internal/store"
 )
 
 // Options controls what a lookup prints.

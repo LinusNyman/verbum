@@ -1,4 +1,4 @@
-// Package ingest builds the vox database from kaikki.org Wiktionary slices:
+// Package ingest builds the verbum database from kaikki.org Wiktionary slices:
 // stream each language, strip during download (never landing the raw 7.5 GB),
 // load into SQLite in ~10k-row transactions, then rebuild FTS once at the end.
 package ingest
@@ -11,8 +11,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/linusnyman/vox/internal/paths"
-	"github.com/linusnyman/vox/internal/store"
+	"github.com/linusnyman/verbum/internal/paths"
+	"github.com/linusnyman/verbum/internal/store"
 )
 
 // estBytesPerLang is a rough STD-tier on-disk estimate (report §2, ±20%),

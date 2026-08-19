@@ -8,7 +8,7 @@ import (
 )
 
 // Page writes content to stdout, routing through a pager when stdout is a
-// terminal. When piped (not a TTY) it writes plain text so vox composes in
+// terminal. When piped (not a TTY) it writes plain text so verbum composes in
 // pipelines. Honours $PAGER; PAGER=cat (or empty on a pipe) means no pager.
 func Page(content string, isTTY bool) error {
 	if !isTTY {

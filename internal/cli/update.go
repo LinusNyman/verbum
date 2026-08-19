@@ -6,12 +6,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/linusnyman/vox/internal/ingest"
-	"github.com/linusnyman/vox/internal/paths"
-	"github.com/linusnyman/vox/internal/store"
+	"github.com/linusnyman/verbum/internal/ingest"
+	"github.com/linusnyman/verbum/internal/paths"
+	"github.com/linusnyman/verbum/internal/store"
 )
 
-// runUpdate handles `vox update [--check] [--lang CODE ...]`.
+// runUpdate handles `verbum update [--check] [--lang CODE ...]`.
 func runUpdate(argv []string) int {
 	var check bool
 	var only []string
@@ -21,7 +21,7 @@ func runUpdate(argv []string) int {
 			check = true
 		case a == "--lang" || a == "-l":
 			if i+1 >= len(argv) {
-				fmt.Fprintln(os.Stderr, "vox: --lang needs a code")
+				fmt.Fprintln(os.Stderr, "verbum: --lang needs a code")
 				return 2
 			}
 			i++
@@ -29,7 +29,7 @@ func runUpdate(argv []string) int {
 		case strings.HasPrefix(a, "--lang="):
 			only = append(only, strings.TrimPrefix(a, "--lang="))
 		default:
-			fmt.Fprintf(os.Stderr, "vox: unknown update flag %q\n", a)
+			fmt.Fprintf(os.Stderr, "verbum: unknown update flag %q\n", a)
 			return 2
 		}
 	}
@@ -40,7 +40,7 @@ func runUpdate(argv []string) int {
 
 	dbPath, err := paths.DBPath()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	err = ingest.Run(dbPath, ingest.Options{
@@ -48,7 +48,7 @@ func runUpdate(argv []string) int {
 		Log:  func(f string, a ...any) { fmt.Fprintf(os.Stderr, f+"\n", a...) },
 	})
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: update failed: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: update failed: "+err.Error())
 		return 2
 	}
 	return 0
@@ -57,13 +57,13 @@ func runUpdate(argv []string) int {
 // runCheck reports installed data age and per-language counts (no download).
 func runCheck() int {
 	if !paths.DBExists() {
-		fmt.Fprintln(os.Stderr, "vox: no dictionary yet — run `vox update`")
+		fmt.Fprintln(os.Stderr, "verbum: no dictionary yet — run `verbum update`")
 		return 1
 	}
 	dbPath, _ := paths.DBPath()
 	db, err := store.Open(dbPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	defer db.Close()
@@ -75,7 +75,7 @@ func runCheck() int {
 	}
 	counts, err := db.LangCounts()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "vox: "+err.Error())
+		fmt.Fprintln(os.Stderr, "verbum: "+err.Error())
 		return 2
 	}
 	codes := make([]string, 0, len(counts))
@@ -89,6 +89,6 @@ func runCheck() int {
 		total += counts[c]
 	}
 	fmt.Printf("total: %d entries\n", total)
-	fmt.Println("(Wiktionary dumps monthly; re-run `vox update` to refresh)")
+	fmt.Println("(Wiktionary dumps monthly; re-run `verbum update` to refresh)")
 	return 0
 }

@@ -1,4 +1,4 @@
-module github.com/linusnyman/vox
+module github.com/linusnyman/verbum
 
 go 1.26.1
 

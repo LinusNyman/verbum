@@ -1,11 +1,11 @@
 package cli
 
-const usage = `vox — offline Wiktionary dictionary
+const usage = `verbum — offline Wiktionary dictionary
 
 USAGE
-  vox [flags] WORD            look up a word (terse: sense 1 + labels)
-  vox -r "beat, thrash"       reverse: search definitions for a word
-  vox update [--check] [--lang CODE ...]
+  verbum [flags] WORD            look up a word (terse: sense 1 + labels)
+  verbum -r "beat, thrash"       reverse: search definitions for a word
+  verbum update [--check] [--lang CODE ...]
 
 FLAGS
   -v            full entry (all senses, examples, etymology, translations)

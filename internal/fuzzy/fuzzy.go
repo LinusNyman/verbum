@@ -1,11 +1,11 @@
 // Package fuzzy ranks spelling candidates by edit distance.
 //
-// The plan named a BK-tree, but vox is a per-invocation CLI with no resident
+// The plan named a BK-tree, but verbum is a per-invocation CLI with no resident
 // process: building a tree over every headword on each run would cost seconds
 // and hundreds of MB for a feature that only fires on a miss. Instead the store
 // pre-filters candidates in SQL (same initial character, length ±2) and this
 // package ranks that small set with plain Levenshtein — same result, negligible
-// cost. Swap in a persistent BK-tree only if vox ever grows a long-lived daemon.
+// cost. Swap in a persistent BK-tree only if verbum ever grows a long-lived daemon.
 package fuzzy
 
 // Levenshtein returns the edit distance between a and b (rune-wise), using a

@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/linusnyman/vox/internal/fuzzy"
-	"github.com/linusnyman/vox/internal/ingest"
-	"github.com/linusnyman/vox/internal/store"
+	"github.com/linusnyman/verbum/internal/fuzzy"
+	"github.com/linusnyman/verbum/internal/ingest"
+	"github.com/linusnyman/verbum/internal/store"
 )
 
 // kaikki-shaped fixtures, one JSON object per line, per language slice.
@@ -18,7 +18,7 @@ var fixtures = map[string]string{
 {"word":"circino","pos":"verb","lang_code":"la","senses":[{"glosses":["dative/ablative singular of circinus"],"form_of":[{"word":"circinus"}],"tags":["form-of"]}]}`,
 	"el": `{"word":"κοπανίζω","pos":"verb","lang_code":"el","senses":[{"glosses":["to beat, thrash"]}]}`,
 	"sv": `{"word":"mönster","pos":"noun","lang_code":"sv","senses":[{"glosses":["pattern"]}]}`,
-	// upstream lang_code is "grc"; vox stores it as "gr"
+	// upstream lang_code is "grc"; verbum stores it as "gr"
 	"gr": `{"word":"τύπος","pos":"noun","lang_code":"grc","senses":[{"glosses":["a blow, impression"]}]}`,
 }
 
@@ -41,7 +41,7 @@ func fakeFetcher(t *testing.T) func(string) (io.ReadCloser, error) {
 
 func buildTestDB(t *testing.T) *store.DB {
 	t.Helper()
-	dbPath := filepath.Join(t.TempDir(), "vox.db")
+	dbPath := filepath.Join(t.TempDir(), "verbum.db")
 	err := ingest.Run(dbPath, ingest.Options{
 		Only:    testLangs,
 		Fetcher: fakeFetcher(t),
